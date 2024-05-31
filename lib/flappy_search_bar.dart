@@ -58,8 +58,10 @@ class SearchBarController<T> {
         onCancel: () => {},
       );
 
-      final List<T> items =
-          await (_cancelableOperation!.value as FutureOr<List<T>>);
+       _cancelableOperation?.value.then((onValue){
+        
+        final List<T> items = onValue;
+
       _lastSearchFunction = onSearch;
       _lastSearchedText = text;
       _list.clear();
@@ -68,6 +70,7 @@ class SearchBarController<T> {
       _lastSorting = null;
       _list.addAll(items);
       _controllerListener?.onListChanged(_list);
+      });
     } catch (error) {
       _controllerListener?.onError(error as Error);
     }
