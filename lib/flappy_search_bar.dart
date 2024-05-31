@@ -126,7 +126,7 @@ class SearchBarController<T> {
 }
 
 /// Signature for a function that creates [ScaledTile] for a given index.
-typedef ScaledTile IndexedScaledTileBuilder(int index);
+// typedef ScaledTile IndexedScaledTileBuilder(int index);
 
 class SearchBar<T> extends StatefulWidget {
   /// Future returning searched items
@@ -195,9 +195,9 @@ class SearchBar<T> extends StatefulWidget {
   /// Weather the list should take the minimum place or not
   final bool shrinkWrap;
 
-  /// Called to get the tile at the specified index for the
-  /// [SliverGridStaggeredTileLayout].
-  final IndexedScaledTileBuilder? indexedScaledTileBuilder;
+  // /// Called to get the tile at the specified index for the
+  // /// [SliverGridStaggeredTileLayout].
+  // final IndexedScaledTileBuilder? indexedScaledTileBuilder;
 
   /// Set the scrollDirection
   final Axis scrollDirection;
@@ -241,7 +241,7 @@ class SearchBar<T> extends StatefulWidget {
     this.searchBarStyle = const SearchBarStyle(),
     this.crossAxisCount = 1,
     this.shrinkWrap = false,
-    this.indexedScaledTileBuilder,
+    // this.indexedScaledTileBuilder,
     this.scrollDirection = Axis.vertical,
     this.mainAxisSpacing = 0.0,
     this.crossAxisSpacing = 0.0,
@@ -341,20 +341,36 @@ class _SearchBarState<T> extends State<SearchBar<T?>>
       List<T?> items, Widget Function(T? item, int index) builder) {
     return Padding(
       padding: widget.listPadding,
-      child: StaggeredGridView.countBuilder(
-        crossAxisCount: widget.crossAxisCount,
-        itemCount: items.length,
-        shrinkWrap: widget.shrinkWrap,
-        staggeredTileBuilder: widget.indexedScaledTileBuilder ??
-            ((int index) => ScaledTile.fit(1)),
-        scrollDirection: widget.scrollDirection,
-        mainAxisSpacing: widget.mainAxisSpacing,
-        crossAxisSpacing: widget.crossAxisSpacing,
-        addAutomaticKeepAlives: true,
-        itemBuilder: (BuildContext context, int index) {
-          return builder(items[index], index);
-        },
-      ),
+      child: StaggeredGrid.count(
+      crossAxisCount: widget.crossAxisCount,
+      mainAxisSpacing: widget.mainAxisSpacing,
+      crossAxisSpacing: widget.crossAxisSpacing,
+      children: List.generate(items.length, (index) {
+        return StaggeredGridTile.fit(
+          crossAxisCellCount: 1,
+          //  widget.indexedScaledTileBuilder != null
+          //     ? widget.indexedScaledTileBuilder!(index).crossAxisCellCount
+          //     : 1, // Default to 1 if no builder is provided
+          child: builder(items[index], index),
+        );
+      }),
+    )
+      
+      
+      // StaggeredGridView.countBuilder(
+      //   crossAxisCount: widget.crossAxisCount,
+      //   itemCount: items.length,
+      //   shrinkWrap: widget.shrinkWrap,
+      //   staggeredTileBuilder: widget.indexedScaledTileBuilder ??
+      //       ((int index) => ScaledTile.fit(1)),
+      //   scrollDirection: widget.scrollDirection,
+      //   mainAxisSpacing: widget.mainAxisSpacing,
+      //   crossAxisSpacing: widget.crossAxisSpacing,
+      //   addAutomaticKeepAlives: true,
+      //   itemBuilder: (BuildContext context, int index) {
+      //     return builder(items[index], index);
+      //   },
+      // ),
     );
   }
 

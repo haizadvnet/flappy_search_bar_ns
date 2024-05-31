@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:flappy_search_bar/flappy_search_bar.dart';
+import 'package:flappy_search_bar/flappy_search_bar.dart' as search;
 import 'package:flappy_search_bar/scaled_tile.dart';
 import 'package:flutter/material.dart';
 
@@ -29,7 +29,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final SearchBarController<Post> _searchBarController = SearchBarController();
+  final search.SearchBarController<Post> _searchBarController = search.SearchBarController();
   bool isReplay = false;
 
   Future<List<Post>> _getALlPosts(String? text) async {
@@ -50,7 +50,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: SearchBar<Post>(
+        child: search.SearchBar<Post>(
           searchBarPadding: EdgeInsets.symmetric(horizontal: 10),
           headerPadding: EdgeInsets.symmetric(horizontal: 10),
           listPadding: EdgeInsets.symmetric(horizontal: 10),
@@ -59,10 +59,10 @@ class _HomeState extends State<Home> {
           placeHolder: Text("placeholder"),
           cancellationWidget: Text("Cancel"),
           emptyWidget: Text("empty"),
-          indexedScaledTileBuilder: (int index) => ScaledTile.count(1, index.isEven ? 2 : 1),
+          // indexedScaledTileBuilder: (int index) => ScaledTile.count(1, index.isEven ? 2 : 1),
           header: Row(
             children: <Widget>[
-              RaisedButton(
+              ElevatedButton(
                 child: Text("sort"),
                 onPressed: () {
                   _searchBarController.sortList((Post a, Post b) {
@@ -70,13 +70,13 @@ class _HomeState extends State<Home> {
                   });
                 },
               ),
-              RaisedButton(
+              ElevatedButton(
                 child: Text("Desort"),
                 onPressed: () {
                   _searchBarController.removeSort();
                 },
               ),
-              RaisedButton(
+              ElevatedButton(
                 child: Text("Replay"),
                 onPressed: () {
                   isReplay = !isReplay;
